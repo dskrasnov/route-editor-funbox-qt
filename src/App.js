@@ -5,6 +5,7 @@ import RoutePointDescriptionField from "./components/RoutePointDescriptionField"
 import RoutePointList from "./components/RoutePointList";
 import MapArea from "./components/MapArea";
 import { withStyles } from "@material-ui/core/styles";
+import { arrayMove } from "react-sortable-hoc";
 
 const styles = () => ({
   appRoot: {
@@ -38,6 +39,12 @@ class App extends Component {
     this.setState({
       newRoutePointDescription: value
     });
+  };
+
+  routePointListSortEndHandler = ({ oldIndex, newIndex }) => {
+    this.setState(({ routePointArray }) => ({
+      routePointArray: arrayMove(routePointArray, oldIndex, newIndex)
+    }));
   };
 
   addRoutePoint = () => {
@@ -110,6 +117,8 @@ class App extends Component {
             <RoutePointList
               routePointArray={routePointArray}
               removeRoutePoint={this.removeRoutePoint}
+              lockAxis="y"
+              onSortEnd={this.routePointListSortEndHandler}
             />
           </Paper>
 

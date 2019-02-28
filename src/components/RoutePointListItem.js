@@ -5,6 +5,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PropTypes from "prop-types";
+import { SortableElement } from "react-sortable-hoc";
 
 const RoutePointListItem = ({ id, description, removeRoutePoint }) => (
   <ListItem>
@@ -32,4 +33,4 @@ RoutePointListItem.defaultProps = {
   removeRoutePoint: () => {}
 };
 
-export default RoutePointListItem;
+export default SortableElement(RoutePointListItem);
