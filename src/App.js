@@ -1,25 +1,15 @@
 import React, { Component } from "react";
-import "./App.css";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { YMaps, Map, Placemark, Polyline } from "react-yandex-maps";
+import RoutePointDescriptionField from "./components/RoutePointDescriptionField";
+import RoutePointList from "./components/RoutePointList";
+import MapArea from "./components/MapArea";
 import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
-  root: {
+const styles = () => ({
+  appRoot: {
     display: "flex",
     height: "100vh"
-  },
-  textFieldContainer: {
-    paddingTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit
   },
   sidebar: {
     flex: "1",
@@ -30,89 +20,108 @@ const styles = theme => ({
   }
 });
 
-function generate(element) {
-  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(value =>
-    React.cloneElement(element, {
-      key: value
-    })
-  );
-}
-
 class App extends Component {
+  state = {
+    newRoutePointDescription: "",
+    mapCenter: { latitude: 55.753575, longitude: 37.62104 },
+    routePointArray: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(value => ({
+      id: value,
+      description: `Item ${value}`,
+      location: {
+        latitude: value / 100 + 55.75,
+        longitude: value / 100 + 37.57
+      }
+    }))
+  };
+
+  routePointDescriptionFieldChangeHandler = ({ target: { value } }) => {
+    this.setState({
+      newRoutePointDescription: value
+    });
+  };
+
+  addRoutePoint = () => {
+    const { newRoutePointDescription } = this.state;
+
+    if (newRoutePointDescription.length > 0) {
+      this.setState(prevState => ({
+        ...prevState,
+        routePointArray: [
+          ...prevState.routePointArray,
+          {
+            id: new Date().getTime(),
+            description: prevState.newRoutePointDescription,
+            location: prevState.mapCenter
+          }
+        ],
+        newRoutePointDescription: ""
+      }));
+    }
+  };
+
+  removeRoutePoint = id => {
+    this.setState(prevState => ({
+      ...prevState,
+      routePointArray: [...prevState.routePointArray].filter(
+        routePoint => routePoint.id !== id
+      )
+    }));
+  };
+
+  moveRoutePoint = (id, latitude, longitude) => {
+    this.setState(prevState => ({
+      ...prevState,
+      routePointArray: [...prevState.routePointArray].map(routePoint =>
+        routePoint.id === id
+          ? {
+              ...routePoint,
+              location: { latitude: latitude, longitude: longitude }
+            }
+          : routePoint
+      )
+    }));
+  };
+
+  changeMapCenter = (latitude, longitude) => {
+    this.setState({
+      mapCenter: { latitude: latitude, longitude: longitude }
+    });
+  };
+
   render() {
     const { classes } = this.props;
+    const { newRoutePointDescription, mapCenter, routePointArray } = this.state;
 
     return (
-      <div className={classes.root}>
-        <Paper className={classes.sidebar}>
-          <div className={classes.textFieldContainer}>
-            <TextField
-              id="outlined-name"
-              label="Name"
-              variant="outlined"
-              fullWidth
-            />
-          </div>
-
-          <List>
-            {generate(
-              <ListItem button>
-                <ListItemText
-                  primary="Single-line item Single-line item Single-line item Single-line item"
-                  primaryTypographyProps={{ noWrap: true }}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton aria-label="Delete">
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            )}
-          </List>
-        </Paper>
-
-        <YMaps version="2.1" query={{ lang: "ru_RU", load: "package.full" }}>
-          <Map
-            className={classes.mapArea}
-            defaultState={{ center: [55.75, 37.57], zoom: 9 }}
-          >
-            <Polyline
-              geometry={[
-                [55.75, 37.82],
-                [55.75, 37.57],
-                [55.6, 37.57],
-                [55.6, 37.32]
-              ]}
-              options={{
-                strokeColor: "#000",
-                strokeWidth: 4,
-                strokeOpacity: 0.5
+      <>
+        <CssBaseline />
+        <div className={classes.appRoot}>
+          <Paper className={classes.sidebar}>
+            <RoutePointDescriptionField
+              value={newRoutePointDescription}
+              onChange={this.routePointDescriptionFieldChangeHandler}
+              onKeyPress={e => {
+                if (e.key === "Enter") {
+                  this.addRoutePoint();
+                }
               }}
             />
 
-            <Placemark
-              geometry={[55.75, 37.82]}
-              properties={{ balloonContent: "Bla-bla-bla..." }}
-              options={{ draggable: true }}
+            <RoutePointList
+              routePointArray={routePointArray}
+              removeRoutePoint={this.removeRoutePoint}
             />
-            <Placemark
-              geometry={[55.75, 37.57]}
-              properties={{ balloonContent: "Bla-bla-bla..." }}
-              options={{ draggable: true }}
-            />
-            <Placemark
-              geometry={[55.6, 37.57]}
-              properties={{ balloonContent: "Bla-bla-bla..." }}
-              options={{ draggable: true }}
-            />
-            <Placemark
-              geometry={[55.6, 37.32]}
-              properties={{ balloonContent: "Bla-bla-bla..." }}
-              options={{ draggable: true }}
-            />
-          </Map>
-        </YMaps>
-      </div>
+          </Paper>
+
+          <MapArea
+            className={classes.mapArea}
+            mapCenter={mapCenter}
+            routePointArray={routePointArray}
+            changeMapCenter={this.changeMapCenter}
+            moveRoutePoint={this.moveRoutePoint}
+          />
+        </div>
+      </>
     );
   }
 }
