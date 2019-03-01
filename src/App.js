@@ -118,6 +118,7 @@ class App extends Component {
               routePointArray={routePointArray}
               removeRoutePoint={this.removeRoutePoint}
               lockAxis="y"
+              distance={2}
               onSortEnd={this.routePointListSortEndHandler}
             />
           </Paper>
