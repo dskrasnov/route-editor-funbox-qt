@@ -9,15 +9,17 @@ import { SortableElement } from "react-sortable-hoc";
 
 const RoutePointListItem = ({ id, description, removeRoutePoint }) => (
   <ListItem>
-    <ListItemText
-      primary={description}
-      primaryTypographyProps={{ noWrap: true }}
-    />
-    <ListItemSecondaryAction>
-      <IconButton aria-label="Удалить" onClick={() => removeRoutePoint(id)}>
-        <DeleteIcon />
-      </IconButton>
-    </ListItemSecondaryAction>
+    <div>
+      <ListItemText
+        primary={description}
+        primaryTypographyProps={{ noWrap: true }}
+      />
+      <ListItemSecondaryAction>
+        <IconButton aria-label="Удалить" onClick={() => removeRoutePoint(id)}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </div>
   </ListItem>
 );
 
