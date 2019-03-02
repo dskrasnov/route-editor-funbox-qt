@@ -6,10 +6,18 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PropTypes from "prop-types";
 import { SortableElement } from "react-sortable-hoc";
+import { withStyles } from "@material-ui/core";
 
-const RoutePointListItem = ({ id, description, removeRoutePoint }) => (
+const styles = theme => ({
+  listItemContentWrapper: {
+    minWidth: 0,
+    paddingRight: theme.spacing.unit * 2
+  }
+});
+
+const RoutePointListItem = ({ classes, id, description, removeRoutePoint }) => (
   <ListItem>
-    <div>
+    <div className={classes.listItemContentWrapper}>
       <ListItemText
         primary={description}
         primaryTypographyProps={{ noWrap: true }}
@@ -35,4 +43,4 @@ RoutePointListItem.defaultProps = {
   removeRoutePoint: () => {}
 };
 
-export default SortableElement(RoutePointListItem);
+export default SortableElement(withStyles(styles)(RoutePointListItem));
