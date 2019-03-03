@@ -41,29 +41,33 @@ class App extends Component {
     });
   };
 
-  routePointListSortEndHandler = ({ oldIndex, newIndex }) => {
-    this.setState(({ routePointArray }) => ({
-      routePointArray: arrayMove(routePointArray, oldIndex, newIndex)
-    }));
+  routePointDescriptionFieldKeyPressHandler = e => {
+    if (e.key === "Enter") {
+      const { newRoutePointDescription, mapCenter } = this.state;
+
+      if (newRoutePointDescription.length > 0) {
+        this.addRoutePoint(
+          mapCenter.latitude,
+          mapCenter.longitude,
+          newRoutePointDescription
+        );
+        this.setState({ newRoutePointDescription: "" });
+      }
+    }
   };
 
-  addRoutePoint = () => {
-    const { newRoutePointDescription } = this.state;
-
-    if (newRoutePointDescription.length > 0) {
-      this.setState(prevState => ({
-        ...prevState,
-        routePointArray: [
-          ...prevState.routePointArray,
-          {
-            id: new Date().getTime(),
-            description: prevState.newRoutePointDescription,
-            location: prevState.mapCenter
-          }
-        ],
-        newRoutePointDescription: ""
-      }));
-    }
+  addRoutePoint = (latitude, longitude, description) => {
+    this.setState(prevState => ({
+      ...prevState,
+      routePointArray: [
+        ...prevState.routePointArray,
+        {
+          id: new Date().getTime(),
+          description: description,
+          location: { latitude: latitude, longitude: longitude }
+        }
+      ]
+    }));
   };
 
   removeRoutePoint = id => {
@@ -89,6 +93,12 @@ class App extends Component {
     }));
   };
 
+  reorderRoutePointArray = (oldIndex, newIndex) => {
+    this.setState(({ routePointArray }) => ({
+      routePointArray: arrayMove(routePointArray, oldIndex, newIndex)
+    }));
+  };
+
   changeMapCenter = (latitude, longitude) => {
     this.setState({
       mapCenter: { latitude: latitude, longitude: longitude }
@@ -107,11 +117,7 @@ class App extends Component {
             <RoutePointDescriptionField
               value={newRoutePointDescription}
               onChange={this.routePointDescriptionFieldChangeHandler}
-              onKeyPress={e => {
-                if (e.key === "Enter") {
-                  this.addRoutePoint();
-                }
-              }}
+              onKeyPress={this.routePointDescriptionFieldKeyPressHandler}
             />
 
             <RoutePointList
@@ -119,7 +125,9 @@ class App extends Component {
               removeRoutePoint={this.removeRoutePoint}
               lockAxis="y"
               distance={2}
-              onSortEnd={this.routePointListSortEndHandler}
+              onSortEnd={({ oldIndex, newIndex }) =>
+                this.reorderRoutePointArray(oldIndex, newIndex)
+              }
             />
           </Paper>
 
