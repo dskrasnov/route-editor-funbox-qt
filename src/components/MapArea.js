@@ -50,7 +50,14 @@ MapArea.propTypes = {
     latitude: PropTypes.number,
     longitude: PropTypes.number
   }),
-  routePoints: PropTypes.array,
+  routePoints: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      latitude: PropTypes.number,
+      longitude: PropTypes.number,
+      description: PropTypes.string
+    })
+  ),
   changeMapCenter: PropTypes.func,
   moveRoutePoint: PropTypes.func
 };

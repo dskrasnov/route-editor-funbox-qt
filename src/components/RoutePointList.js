@@ -19,7 +19,12 @@ const RoutePointList = ({ routePoints, removeRoutePoint }) => (
 );
 
 RoutePointList.propTypes = {
-  routePoints: PropTypes.array,
+  routePoints: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      description: PropTypes.string
+    })
+  ),
   removeRoutePoint: PropTypes.func
 };
 
