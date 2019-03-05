@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 const MapArea = ({
   className,
   mapCenter,
-  routePointArray,
   changeMapCenter,
+  routePoints,
   moveRoutePoint
 }) => (
   <YMaps version="2.1" query={{ lang: "ru_RU", load: "package.full" }}>
@@ -19,9 +19,9 @@ const MapArea = ({
       onBoundsChange={e => changeMapCenter(...e.get("newCenter"))}
     >
       <Polyline
-        geometry={routePointArray.map(({ location }) => [
-          location.latitude,
-          location.longitude
+        geometry={routePoints.map(({ latitude, longitude }) => [
+          latitude,
+          longitude
         ])}
         options={{
           strokeColor: "#F00",
@@ -30,10 +30,10 @@ const MapArea = ({
         }}
       />
 
-      {routePointArray.map(({ id, location, description }) => (
+      {routePoints.map(({ id, latitude, longitude, description }) => (
         <Placemark
           key={id}
-          geometry={[location.latitude, location.longitude]}
+          geometry={[latitude, longitude]}
           properties={{ balloonContent: description }}
           options={{ draggable: true }}
           onDrag={e =>
@@ -50,14 +50,14 @@ MapArea.propTypes = {
     latitude: PropTypes.number,
     longitude: PropTypes.number
   }),
-  routePointArray: PropTypes.array,
+  routePoints: PropTypes.array,
   changeMapCenter: PropTypes.func,
   moveRoutePoint: PropTypes.func
 };
 
 MapArea.defaultProps = {
   mapCenter: { latitude: 0, longitude: 0 },
-  routePointArray: [],
+  routePoints: [],
   changeMapCenter: () => {},
   moveRoutePoint: () => {}
 };

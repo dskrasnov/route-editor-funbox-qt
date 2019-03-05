@@ -4,9 +4,9 @@ import RoutePointListItem from "./RoutePointListItem";
 import PropTypes from "prop-types";
 import { SortableContainer } from "react-sortable-hoc";
 
-const RoutePointList = ({ routePointArray, removeRoutePoint }) => (
+const RoutePointList = ({ routePoints, removeRoutePoint }) => (
   <List>
-    {routePointArray.map(({ id, description }, index) => (
+    {routePoints.map(({ id, description }, index) => (
       <RoutePointListItem
         index={index}
         key={id}
@@ -19,12 +19,12 @@ const RoutePointList = ({ routePointArray, removeRoutePoint }) => (
 );
 
 RoutePointList.propTypes = {
-  routePointArray: PropTypes.array,
+  routePoints: PropTypes.array,
   removeRoutePoint: PropTypes.func
 };
 
 RoutePointList.defaultProps = {
-  routePointArray: [],
+  routePoints: [],
   removeRoutePoint: () => {}
 };
 
