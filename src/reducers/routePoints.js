@@ -6,15 +6,8 @@ import {
 } from "../actions/actionTypes";
 import { arrayMove } from "react-sortable-hoc";
 
-const DEFAULT_ROUTE_POINTS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(value => ({
-  id: value,
-  latitude: value / 100 + 55.75,
-  longitude: value / 100 + 37.57,
-  description: `Item ${value}`
-}));
-
 const routePoints = (
-  state = DEFAULT_ROUTE_POINTS,
+  state = [],
   { type, id, latitude, longitude, description, oldIndex, newIndex }
 ) => {
   switch (type) {
