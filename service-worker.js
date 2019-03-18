@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/route-editor-funbox-qt/precache-manifest.f1fbbe88f5f6beeb19e8d7952661ef22.js"
+  "/route-editor-funbox-qt/precache-manifest.8bebc56d612a2d00b8eff1c56271c218.js"
 );
 
 workbox.clientsClaim();
