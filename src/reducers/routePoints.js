@@ -23,10 +23,10 @@ const routePoints = (
       ];
 
     case REMOVE_ROUTE_POINT:
-      return [...state].filter(task => task.id !== id);
+      return state.filter(task => task.id !== id);
 
     case MOVE_ROUTE_POINT:
-      return [...state].map(routePoint =>
+      return state.map(routePoint =>
         routePoint.id === id
           ? { ...routePoint, latitude: latitude, longitude: longitude }
           : routePoint
